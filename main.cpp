@@ -44,11 +44,12 @@ int main(int argc, char *argv[])
     QObject::connect(&a, &QApplication::lastWindowClosed, &w, [&clientthread, &serverthread]() {
 
         qDebug() << "Server thread about to quit";
+
         clientthread->quit();
         clientthread->wait();
         clientthread->deleteLater();
-        qDebug() <<  "buradayız";
-        qDebug() << "lastwindowthread:" <<QThread::currentThread();
+
+        qDebug() << "lastwindowthread:" << QThread::currentThread();
 
         serverthread->quit();
         serverthread->wait();
