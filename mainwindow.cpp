@@ -13,6 +13,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QSemaphore>
 
 System MainWindow::system;
 
@@ -31,12 +32,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     clientthread->start();
 
     ui->setupUi(this);
-
     QList<QPushButton*> Buttons = findChildren<QPushButton*>();
     for(QPushButton* button : Buttons) {
         Setup_Button(button);
     }
-
     Setup_Text_Fields();
     Setup_DateTime();
     Setup_Currency_Table();

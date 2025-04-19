@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QStringList>
 #include <QMap>
 #include <QTimer>
 

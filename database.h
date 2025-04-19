@@ -4,8 +4,6 @@
 #include <QObject>
 #include <QSqlDatabase>
 #include <QSqlQuery>
-#include <QSqlError>
-#include <memory>
 
 class Database : public QObject {
     Q_OBJECT

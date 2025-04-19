@@ -1,5 +1,9 @@
 #include "Account.h"
 
+#include <cstdint>
+#include <iomanip>
+#include <sstream>
+
 QDebug &operator<< (QDebug& debug, const std::shared_ptr<Account>& obj)
 {
     debug << "Name: " <<obj->name << "\nID: " <<obj->ID << "\nBalance: " << obj->asset;

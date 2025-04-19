@@ -1,5 +1,7 @@
 #include "User.h"
 
+#include <algorithm>
+
 QDebug &operator<< (QDebug& debug, const std::shared_ptr<User>& obj)
 {
     debug << obj->username << obj->password;

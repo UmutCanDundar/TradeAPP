@@ -4,7 +4,6 @@
 #include "Account.h"
 
 #include <vector>
-#include <algorithm>
 #include <memory>
 
 class User

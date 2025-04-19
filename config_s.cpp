@@ -1,4 +1,5 @@
 #include "config_s.h"
+
 #include <QFile>
 #include <QJsonDocument>
 #include <QByteArray>

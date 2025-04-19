@@ -7,6 +7,8 @@
 #include <QJsonObject>
 #include <QByteArray>
 #include <QThread>
+#include <QSqlError>
+
 
 Database::Database(QObject *parent) : QObject(parent)
 {

@@ -8,6 +8,7 @@
 #include <QThread>
 #include <QSemaphore>
 
+
 Client::Client(QObject *parent) : QObject(parent), client_socket(new QTcpSocket(this))
 {
     connect(client_socket, &QTcpSocket::readyRead, this, &Client::handleServerResponse);

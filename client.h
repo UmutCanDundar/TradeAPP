@@ -4,7 +4,7 @@
 #include <QTcpSocket>
 #include <QObject>
 #include <QByteArray>
-#include <QSemaphore>
+
 
 class Client : public QObject {
     Q_OBJECT

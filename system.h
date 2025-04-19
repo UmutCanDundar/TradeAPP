@@ -1,7 +1,9 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
+
 #include "User.h"
 #include "auxiliary.h"
+
 #include <unordered_set>
 #include <iterator>
 
