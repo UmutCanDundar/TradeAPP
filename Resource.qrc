@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/icons8-back-button-30.svg</file>
+    </qresource>
+    <qresource prefix="/config">
+        <file>config/config_DB.json</file>
+    </qresource>
+</RCC>
