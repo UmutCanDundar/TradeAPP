@@ -119,6 +119,12 @@ void Database::Prepare_Query<Database::Query::getaccounts>(QSqlQuery &sql_query)
     sql_query.prepare("SELECT * FROM accounts WHERE username = ?");
 }
 
+template<>
+void Database::Prepare_Query<Database::Query::accountedit>(QSqlQuery &sql_query)
+{
+    sql_query.prepare("UPDATE accounts SET account_name = ?, updated_at = CURRENT_TIMESTAMP WHERE account_id = ?");
+}
+
 template QSqlQuery Database::Execute_Query<Database::Query::tablescreate>(const QVariantList &);
 template QSqlQuery Database::Execute_Query<Database::Query::userinsert>(const QVariantList &);
 template QSqlQuery Database::Execute_Query<Database::Query::userdelete>(const QVariantList &);
@@ -126,3 +132,4 @@ template QSqlQuery Database::Execute_Query<Database::Query::accountadd>(const QV
 template QSqlQuery Database::Execute_Query<Database::Query::accountdelete>(const QVariantList &);
 template QSqlQuery Database::Execute_Query<Database::Query::accountnumber>(const QVariantList &);
 template QSqlQuery Database::Execute_Query<Database::Query::getaccounts>(const QVariantList &);
+template QSqlQuery Database::Execute_Query<Database::Query::accountedit>(const QVariantList &);

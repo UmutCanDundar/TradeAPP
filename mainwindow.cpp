@@ -90,7 +90,7 @@ void MainWindow::onLoginButtonclicked()
         QVariantList values;
         values << QString::fromStdString(current_user->Get_Username());
         qDebug() << "values" << values;
-        QMetaObject::invokeMethod(client,[this, &values, &sema] {
+        QMetaObject::invokeMethod(client,[this, values, &sema] {
             client->Send_Request("6", values);
 
             connect(client, &Client::Ready, [&sema, this]() {
@@ -102,19 +102,27 @@ void MainWindow::onLoginButtonclicked()
         sema.acquire();
 
         QByteArray data_account = client->Get_Response();
+
         QJsonDocument json_doc = QJsonDocument::fromJson(data_account);
         QJsonArray json_array = json_doc.array();
-        for (const auto &json_array_value : json_array) {
-            QJsonObject json_obj = json_array_value.toObject();
+        if(!json_array.isEmpty()) {
+            for (const auto &json_array_value : json_array) {
+                QJsonObject json_obj = json_array_value.toObject();
 
-            QString account_str;
-            QDebug stream(&account_str);
-            stream << "Name: " << json_obj["account_name"].toString() << "\nID: " << json_obj["account_id"].toString()
-                   << "\nBalance: " << json_obj["balance"].toDouble() << json_obj["asset_type"].toString();
+                QString account_str;
+                QDebug stream(&account_str);
+                stream << "Name: " << json_obj["account_name"].toString() << "\n" << "ID: " << json_obj["account_id"].toString()
+                       << "\n" << "Balance: " << json_obj["balance"].toDouble() << json_obj["asset_type"].toString();
 
-            QListWidgetItem *Item = new QListWidgetItem(account_str, ui->listWidget_Accounts);
-            Item->setData(Qt::UserRole, QVariant::fromValue(json_obj["account_id"]));
-            Item->setData(Qt::DisplayRole, QVariant::fromValue(account_str));
+                QListWidgetItem *Item = new QListWidgetItem(account_str);
+                Item->setData(Qt::UserRole, QVariant::fromValue(json_obj["account_id"].toString()));
+                ui->listWidget_Accounts->addItem(Item);
+
+                current_user->Add_Account(json_obj["account_name"].toString().toStdString(),
+                                          json_obj["asset_type"].toString().toStdString().c_str(),
+                                          json_obj["balance"].toDouble(),
+                                          json_obj["account_id"].toString().right(9).toInt()-1);
+            }
         }
         ui->stackedWidget_main->setCurrentIndex(2);
         ui->stackedWidget_inner->setCurrentIndex(0);
@@ -137,7 +145,7 @@ void MainWindow::onCreateButtonclicked()
 
             QVariantList values;
             values << QString::fromStdString(new_username) << QString::fromStdString(new_password) << "";
-            QMetaObject::invokeMethod(client,[this, &values, &sema] {
+            QMetaObject::invokeMethod(client,[this, values, &sema] {
                 client->Send_Request("1", values);
                 connect(client, &Client::Ready, [&sema, this]() {
                     sema.release();
@@ -201,12 +209,15 @@ void MainWindow::onAddAccountButtonclicked()
     QByteArray data_account_id = client->Get_Response();
     QJsonDocument json_doc = QJsonDocument::fromJson(data_account_id);
     QJsonArray json_array = json_doc.array();
-    QJsonObject json_obj = json_array.at(0).toObject();
-    QString last_account_id = json_obj["account_id9"].toString();
-    last_account_number = last_account_id.right(9).toInt();
-
-
-    if(!(account_name.empty() && asset_type.empty() && asset_initial_amount < 0)) {
+    if(!json_array.isEmpty()) {
+        QJsonObject json_obj = json_array.at(0).toObject();
+        QString last_account_id = json_obj["account_id9"].toString();
+        last_account_number = last_account_id.right(9).toInt();
+    } else {
+        last_account_number = 0;
+    }
+    qDebug() << last_account_number;
+    if(!account_name.empty() && !asset_type.empty() && asset_initial_amount >= 0) {
         current_user->Add_Account(account_name, asset_type.c_str(), asset_initial_amount, last_account_number);
         std::shared_ptr<Account> last_account = current_user->Get_Accounts().back();
 
@@ -222,12 +233,14 @@ void MainWindow::onAddAccountButtonclicked()
         QDebug stream(&account_str);
         stream << last_account;
         QListWidgetItem *Item = new QListWidgetItem(account_str);
-        Item->setData(Qt::UserRole, QVariant::fromValue(last_account->Get_ID()));
-        Item->setData(Qt::DisplayRole, QVariant::fromValue(account_str));
+        qDebug() << "Id:" << last_account->Get_ID();
+        Item->setData(Qt::UserRole, QVariant::fromValue(QString::fromStdString(last_account->Get_ID())));
         ui->listWidget_Accounts->addItem(Item);
 
         ui->LE_AccountName->clear();
         ui->LE_Amount->clear();
+
+
     }
 }
 
@@ -242,8 +255,15 @@ void MainWindow::onDeleteAccountButtonclicked()
         Confirm.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
         if(Confirm.exec() == QMessageBox::Yes){
-            std::string accountID_toDelete = selected_account->data(Qt::UserRole).value<std::string>();
-            current_user->Delete_Account(accountID_toDelete);
+            QString accountID_toDelete = selected_account->data(Qt::UserRole).toString();
+
+            QVariantList values;
+            values << accountID_toDelete;
+            QMetaObject::invokeMethod(client,[this, values] {
+                client->Send_Request("4", values);
+            }, Qt::QueuedConnection);
+
+            current_user->Delete_Account(accountID_toDelete.toStdString());
             ui->listWidget_Accounts->takeItem(ui->listWidget_Accounts->row(selected_account));
         }
     }
@@ -253,18 +273,24 @@ void MainWindow::onEditAccNameButtonclicked()
 {
     if(ui->listWidget_Accounts->currentItem() != nullptr) {
         QListWidgetItem *selected_account = ui->listWidget_Accounts->currentItem();
-        std::string accountID_toEdit = selected_account->data(Qt::UserRole).value<std::string>();
-        std::shared_ptr<Account> account_toEdit = current_user->Find_Account_By_ID(accountID_toEdit);
+        QString accountID_toEdit = selected_account->data(Qt::UserRole).toString();
+        std::shared_ptr<Account> account_toEdit = current_user->Find_Account_By_ID(accountID_toEdit.toStdString());
 
         QInputDialog Edit;
         QString new_account_name = Edit.getText(this,"Edit Account Name","Enter New Name:");
 
         if(!new_account_name.isEmpty()) {
-            account_toEdit->Set_Account_Name(new_account_name.toStdString());
+            QVariantList values;
+            values << new_account_name << accountID_toEdit;
+            QMetaObject::invokeMethod(client,[this, values] {
+                client->Send_Request("7", values);
+            }, Qt::QueuedConnection);
 
-            QString account_str;
-            QDebug stream(&account_str);
-            stream << account_toEdit;
+            account_toEdit->Set_Account_Name(new_account_name.toStdString());
+            QString account_str = selected_account->data(Qt::DisplayRole).toString();
+            QStringList lines = account_str.split("\n");
+            lines[0] = "Name: " + new_account_name;
+            account_str = lines.join("\n");
             selected_account->setData(Qt::DisplayRole, QVariant::fromValue(account_str));
         }
     }

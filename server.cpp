@@ -82,6 +82,9 @@ void Server::readClientData()
     case Database::Query::getaccounts:
         query = database->Execute_Query<Database::Query::getaccounts>(values);
         break;
+    case Database::Query::accountedit:
+        query = database->Execute_Query<Database::Query::accountedit>(values);
+        break;
     default:
         qDebug() << "Unknown query type.";
         break;

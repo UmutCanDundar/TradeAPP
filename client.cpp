@@ -26,9 +26,9 @@ void Client::Send_Request(const QString &query_type, const QVariantList &values)
     qDebug() << "send request:" << client_socket->state() <<  query_type;
     if(!(client_socket->state() == QAbstractSocket::ConnectedState))
         client_socket->connectToHost("127.0.0.1", 3307);
-
+qDebug() << "bura1";
     if (client_socket->waitForConnected()) {
-
+        qDebug() << "bura2";
         QJsonArray json_array;
         for (const auto &value : values)
             json_array.append(QJsonValue::fromVariant(value));
@@ -37,7 +37,7 @@ void Client::Send_Request(const QString &query_type, const QVariantList &values)
         QJsonDocument json_doc1(json_obj1);
         QByteArray data_values = json_doc1.toJson();
         client_socket->write(data_values);
-
+        qDebug() << "bura3";
     } else {
         qDebug() << "Failed to connect to server:" << client_socket->errorString();
     }

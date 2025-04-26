@@ -12,7 +12,7 @@ private:
    QSqlDatabase db;
 
 public:
-    enum class Query : uint8_t {tablescreate, userinsert, userdelete, accountadd, accountdelete, accountnumber, getaccounts};
+    enum class Query : uint8_t {tablescreate, userinsert, userdelete, accountadd, accountdelete, accountnumber, getaccounts, accountedit};
     Q_ENUM (Query)
 
     Database(QObject *parent = nullptr);

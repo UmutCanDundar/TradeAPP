@@ -33,7 +33,7 @@ void User::Add_Account(const std::string& name, const char* asset_type, const do
     accounts.push_back(std::make_shared<Account>(name, asset_type, initial_asset_amount, account_number));
 }
 
-void User::Delete_Account(std::string& accountID_toDelete)
+void User::Delete_Account(const std::string& accountID_toDelete)
 {
     auto account_it = std::find_if(accounts.begin(), accounts.end(), [&accountID_toDelete] (const std::shared_ptr<Account> account) {
 
