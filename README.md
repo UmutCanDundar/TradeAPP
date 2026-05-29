@@ -27,10 +27,8 @@ At this stage, the application runs as a single integrated system. Client-server
 
 TradeAPP served its purpose as a learning project and helped me gain practical experience in C++ desktop development and database integration. 
 
-Which is why this project is no longer actively developed.
+This project is no longer actively developed.
 
 ## 📌 Note
 
 After completing the main learning goals (Qt development, database integration, and application structure), I shifted my focus to more low-level and performance-critical systems development.
-
-##
