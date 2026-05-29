@@ -1,32 +1,36 @@
-# TradeAPP (Developed with Qt)
+# TradeAPP (Qt Desktop Application)
 
-TradeAPP is a desktop application that allows users to create accounts (similar to a banking system) and perform buy-sell operations.  
-All user and transaction data is stored in a MySQL database.
+TradeAPP is a C++ Qt-based desktop application I built for learning purposes.
 
-In the future, the application will feature a trade simulation system powered by AI, designed to provide a realistic trading experience.
+The idea behind the project was to understand how a desktop application is developed end-to-end using C++, including GUI design, database integration, and basic application architecture. I also wanted to explore concepts related to trading systems, which is why the project is designed around a “trading-style” user experience.
 
----
+## 🎯 Purpose of the Project
 
-## 🚀 Project Purpose
+This project was created purely for self-learning and curiosity:
 
-This project is being developed as part of my self-education. Therefore:
+* Learning how to build a desktop application using **C++ and Qt**
+* Understanding the **signal/slot mechanism** in Qt
+* Practicing **GUI design and event-driven programming**
+* Learning how to integrate and use a **MySQL database**
+* Exploring how a simple trading-style application could be structured
 
-- I have uploaded it on GitHub even though it is still under development.  
-  📌 *The goal is to gain more experience with the GitHub workflow and version control.*
+The name “TradeAPP” comes from my general interest in trading systems. I designed the concept around a basic banking/trading idea where users could simulate account creation and buy/sell operations.
 
-- The application is temporarily designed to run on a single machine.  
-  🔧 *For now, the client and server logic are not separated.*
+## ⚙️ Architecture
 
----
+* C++ / Qt – Desktop GUI application
+* MySQL – Data storage and persistence
 
-## 🛠️ Technologies Used
+At this stage, the application runs as a single integrated system. Client-server separation was not implemented.
 
-- C++ / Qt Framework – for building the desktop GUI  
-- MySQL – for database storage  
-- (Planned) AI-based trade simulation logic  
+## 🧠 Status
 
----
+TradeAPP served its purpose as a learning project and helped me gain practical experience in C++ desktop development and database integration. 
 
-## 📌 Notes
+Which is why this project is no longer actively developed.
 
-- This project is a "work in progress" and updated continuously.
+## 📌 Note
+
+After completing the main learning goals (Qt development, database integration, and application structure), I shifted my focus to more low-level and performance-critical systems development.
+
+##
